@@ -1,6 +1,6 @@
 from pathlib import Path
 from shutil import copyfile
-from threading import Thread
+from threading import Thread, Semaphore
 import argparse
 import logging
 from uuid import uuid4
@@ -13,22 +13,24 @@ def get_params():
     return vars(args_cli.parse_args())
 
 
-def sort_folder(folder : Path, output: Path):
-    for el in folder.iterdir():
-        if el.is_file():
-            ext = el.suffix
-            if not ext:
-                continue
-            destination_path = output.joinpath(ext[1:])
-            destination_path.mkdir(exist_ok=True, parents=True)
-            logging.info(f"In thread created {ext}")
-            destination_file = destination_path.joinpath(el.name)
-            if destination_file.exists():
-                destination_file = destination_path.joinpath(f"{el.stem}_{uuid4()}{el.suffix}")
-            try:
-                copyfile(el, destination_file)
-            except OSError as e:
-                logging.error(e)
+def sort_folder(folder : Path, output: Path, condition: Semaphore):
+    with condition:
+        for el in folder.iterdir():
+            if el.is_file():
+                ext = el.suffix
+                if not ext:
+                    continue
+                destination_path = output.joinpath(ext[1:])
+                destination_path.mkdir(exist_ok=True, parents=True)
+                destination_file = destination_path.joinpath(el.name)
+                if destination_file.exists():
+                    destination_file = destination_path.joinpath(f"{el.stem}_{uuid4()}{el.suffix}")
+                try:
+                    logging.info(f"In thread created {ext} for {el}")
+                    copyfile(el, destination_file)
+                except OSError as e:
+                    logging.error(e)
+
 
 def get_folders(source_path: Path) -> list[Path]:
     folders = []
@@ -46,17 +48,18 @@ def main(args_cli: dict = None):
     folders = get_folders(Path(source))
     output_path = Path(output)
     threads = []
-    for folder in folders:
-        th = Thread(target=sort_folder, args=(folder, output_path))
+    pool = Semaphore(5)
+    for num, folder in enumerate(folders):
+        th = Thread(name=f'Th-{num}',  target=sort_folder, args=(folder, output_path, pool))
         th.start()
         threads.append(th)
     logging.info(f"Wait all {len(threads)} threads")
     [th.join() for th in threads]
     logging.info("Finish")
-    print(folders)
+    # print(folders)
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, format='%(threadName)s %(message)s')
     args = get_params()
     main(args_cli=args)
