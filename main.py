@@ -4,6 +4,7 @@ from threading import Thread, Semaphore
 import argparse
 import logging
 from uuid import uuid4
+from datetime import datetime
 
 
 def get_params():
@@ -15,18 +16,27 @@ def get_params():
 
 def sort_folder(folder : Path, output: Path, condition: Semaphore):
     with condition:
+        logging.info(f"`Thread running for sort in {folder}")
+        # pre sorting files to dict
+        result = {}
         for el in folder.iterdir():
             if el.is_file():
-                ext = el.suffix
+                ext = el.suffix.lower()
                 if not ext:
                     continue
-                destination_path = output.joinpath(ext[1:])
-                destination_path.mkdir(exist_ok=True, parents=True)
+                ext_items = result.get(ext,[])
+                ext_items.append(el)
+                result[ext] = ext_items
+        # physical copy founded files
+        for ext, ext_items in result.items():
+            destination_path = output.joinpath(ext[1:])
+            destination_path.mkdir(exist_ok=True, parents=True)
+            for el in ext_items:
                 destination_file = destination_path.joinpath(el.name)
                 if destination_file.exists():
                     destination_file = destination_path.joinpath(f"{el.stem}_{uuid4()}{el.suffix}")
                 try:
-                    logging.info(f"In thread created {ext} for {el}")
+                    logging.info(f"`Thread copy {el} to {destination_file}")
                     copyfile(el, destination_file)
                 except OSError as e:
                     logging.error(e)
@@ -48,7 +58,7 @@ def main(args_cli: dict = None):
     folders = get_folders(Path(source))
     output_path = Path(output)
     threads = []
-    pool = Semaphore(5)
+    pool = Semaphore(1)
     for num, folder in enumerate(folders):
         th = Thread(name=f'Th-{num}',  target=sort_folder, args=(folder, output_path, pool))
         th.start()
@@ -60,6 +70,9 @@ def main(args_cli: dict = None):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, format='%(threadName)s %(message)s')
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [ %(threadName)s ] %(message)s')
     args = get_params()
+    start_time = datetime.now()
     main(args_cli=args)
+    duration = datetime.now() - start_time
+    logging.info(f"Duration : {duration}")
