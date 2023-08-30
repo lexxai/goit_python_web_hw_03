@@ -1,29 +1,37 @@
-from multiprocessing import cpu_count, process
+from multiprocessing import cpu_count, Pool, current_process
 
 
-def factorize_one(n , max_number):
+def factorize_one(n):
     result_div = []
-    for i in range(1, max_number + 1):
+    for i in range(1, n + 1):
         if n % i == 0:
             result_div.append(i)
     return result_div
 
 
+def factorize_mul_pool(*number):
+    result: list[list[int]] = []
+    # for n in number:
+    with Pool(processes=cpu_count()) as pool:
+        # result_div = factorize_one(n , max_number)
+        result = pool.map(factorize_one, number)
+        #result.append(result_div)
+    return tuple(result)
+
+
 def factorize_mul(*number):
-    max_number = max(number)
     result: list[list[int]] = []
     for n in number:
-        result_div = factorize_one(n , max_number)
+        result_div = factorize_one(n)
         result.append(result_div)
     return tuple(result)
 
 
 def factorize(*number):
-    max_number = max(number)
     result: list[list[int]] = []
     for n in number:
         result_div = []
-        for i in range(1,max_number+1):
+        for i in range(1,n+1):
             if n % i == 0:
                 result_div.append(i)
         result.append(result_div)
