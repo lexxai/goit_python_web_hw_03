@@ -55,7 +55,7 @@ def factorize_mul_thread(
     return tuple(result)
 
 
-def factorize(*number):
+def factorize_sync(*number):
     result: list[list[int]] = []
     for n in number:
         result_div = []
@@ -70,7 +70,7 @@ def test_factorize(method: int = 0):
     source = (128, 255, 99999, 10651060)
 
     if method == 0:
-        a, b, c, d = factorize(*source)
+        a, b, c, d = factorize_sync(*source)
     elif method == 1:
         a, b, c, d = factorize_mul(*source)
     elif method == 2:
