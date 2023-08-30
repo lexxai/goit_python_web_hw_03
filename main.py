@@ -3,7 +3,7 @@ from shutil import copyfile
 from threading import Thread, Semaphore
 import argparse
 import logging
-from typing import Any
+from typing import Any, Tuple
 from uuid import uuid4
 from datetime import datetime
 from factorize_sync import test_factorize
@@ -96,6 +96,17 @@ def main(args_cli: dict = None):
     # print(folders)
 
 
+def test_fact():
+    METHOD_DESC: tuple = ('SYNC', "ASYNC POOL")
+    cpu_total_m = cpu_count()
+    for method in range(0,2):
+        start_time_m = datetime.now()
+        test_factorize(method)
+        duration_m = datetime.now() - start_time_m
+        logging.info(
+            f"Method [{METHOD_DESC[method]}]. Duration: {duration_m}  on this system is total cpu: {cpu_total_m}"
+        )
+
 if __name__ == "__main__":
     logging.basicConfig(
         level=logging.DEBUG, format="%(asctime)s [ %(threadName)s ] %(message)s"
@@ -103,13 +114,14 @@ if __name__ == "__main__":
     args = get_params()
     threads_max = args.get("threads", 10)
     factorize = args.get("factorize", False)
-    cpu_total = cpu_count()
-    start_time = datetime.now()
+
     if factorize:
-        test_factorize()
+        test_fact()
     else:
+        cpu_total = cpu_count()
+        start_time = datetime.now()
         main(args_cli=args)
-    duration = datetime.now() - start_time
-    logging.info(
-        f"Duration : {duration} with max threads: {threads_max}, on this system is total cpu: {cpu_total}"
-    )
+        duration = datetime.now() - start_time
+        logging.info(
+            f"Duration : {duration} with max threads: {threads_max}, on this system is total cpu: {cpu_total}"
+        )
