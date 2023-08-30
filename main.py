@@ -6,16 +6,20 @@ import logging
 from typing import Any
 from uuid import uuid4
 from datetime import datetime
+from factorize_sync import test_factorize
 
 
 def get_params():
     args_cli = argparse.ArgumentParser(description="File sorter")
-    args_cli.add_argument("-s", "--source", required=True)
+    args_cli.add_argument(
+        "-s", "--source", required=False, default="pictures", help="default: pictures"
+    )
     args_cli.add_argument("-o", "--output", default="sort_result")
     args_cli.add_argument(
         "-t", "--threads", default=10, type=int, help="Max threads, default: 10"
     )
     args_cli.add_argument("-v", "--verbose", action="store_true")
+    args_cli.add_argument("-f", "--factorize", action="store_true")
 
     return vars(args_cli.parse_args())
 
@@ -97,7 +101,11 @@ if __name__ == "__main__":
     )
     args = get_params()
     threads_max = args.get("threads", 10)
+    factorize = args.get("factorize", False)
     start_time = datetime.now()
-    main(args_cli=args)
+    if factorize:
+        test_factorize()
+    else:
+        main(args_cli=args)
     duration = datetime.now() - start_time
     logging.info(f"Duration : {duration} with threads: {threads_max}")
