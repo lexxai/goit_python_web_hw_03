@@ -149,7 +149,7 @@ def test_factorize(method: int = 0):
 
 
 def test_fact():
-    METHOD_DESC: tuple = ('SYNC ONE FUNC', 'SYNC SPLIT FUNC', "ASYNC POOL", "ASYNC THREAD", "ASYNC PROC PIPE")
+    METHOD_DESC: tuple = ('SYNC ONE FUNC', 'SYNC SPLIT FUNC', "ASYNC MP POOL", "ASYNC THREAD", "ASYNC MP PROC PIPE")
     durations = []
     cpu_total_m = cpu_count()
     for method in range(0,len(METHOD_DESC)):

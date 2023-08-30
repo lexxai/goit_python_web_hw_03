@@ -80,11 +80,11 @@ python main.py -s picrures -t 1 -v
 ##  test factorize by two methods with measure time
 ```
 python main.py -f
-Method [SYNC ONE FUNC]. Duration: 0:00:00.651928  on this system is total cpu: 4
-Method [SYNC SPLIT FUNC]. Duration: 0:00:00.660318  on this system is total cpu: 4
-Method [ASYNC POOL]. Duration: 0:00:00.893965  on this system is total cpu: 4
+Method [SYNC ONE FUNC]. Duration: 0:00:00.661508  on this system is total cpu: 4
+Method [SYNC SPLIT FUNC]. Duration: 0:00:00.681660  on this system is total cpu: 4
+Method [ASYNC MP POOL]. Duration: 0:00:00.891873  on this system is total cpu: 4
 Threads max: 10
-Method [ASYNC THREAD]. Duration: 0:00:00.647461  on this system is total cpu: 4
-Method [ASYNC PROC PIPE]. Duration: 0:00:00.923920  on this system is total cpu: 4
+Method [ASYNC THREAD]. Duration: 0:00:00.639026  on this system is total cpu: 4
+Method [ASYNC MP PROC PIPE]. Duration: 0:00:00.920704  on this system is total cpu: 4
 
 ```
