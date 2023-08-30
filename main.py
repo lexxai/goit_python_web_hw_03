@@ -7,8 +7,14 @@ from typing import Any, Tuple
 from uuid import uuid4
 from datetime import datetime
 from multiprocessing import cpu_count
-from factorize_sync import factorize_mul, factorize_mul_thread, factorize_mul_pool, factorize_sync
+from factorize_sync import (
+    factorize_mul,
+    factorize_mul_thread,
+    factorize_mul_pool,
+    factorize_sync,
+)
 from factorize_async_pipe import factorize_mul_pipe
+from factorize_async_queue import factorize_mul_queue
 
 
 def get_params():
@@ -96,6 +102,7 @@ def main(args_cli: dict = None):
         logging.info("Finish")
     # print(folders)
 
+
 def test_factorize(method: int = 0):
     source = (128, 255, 99999, 10651060)
 
@@ -106,14 +113,13 @@ def test_factorize(method: int = 0):
     elif method == 2:
         a, b, c, d = factorize_mul_pool(*source)
     elif method == 3:
-        threads_maximum  = 10
-        logging.info(
-            f"Threads max: {threads_maximum}"
-        )
-        a, b, c, d = factorize_mul_thread(*source, threads_maximum = threads_maximum)
-
+        threads_maximum = 10
+        logging.info(f"Threads max: {threads_maximum}")
+        a, b, c, d = factorize_mul_thread(*source, threads_maximum=threads_maximum)
     elif method == 4:
         a, b, c, d = factorize_mul_pipe(*source)
+    elif method == 5:
+        a, b, c, d = factorize_mul_queue(*source)
 
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]
@@ -147,12 +153,18 @@ def test_factorize(method: int = 0):
     ]
 
 
-
 def test_fact():
-    METHOD_DESC: tuple = ('SYNC ONE FUNC', 'SYNC SPLIT FUNC', "ASYNC MP POOL", "ASYNC THREAD", "ASYNC MP PROC PIPE")
+    METHOD_DESC: tuple = (
+        "SYNC ONE FUNC",
+        "SYNC SPLIT FUNC",
+        "ASYNC MP POOL",
+        "ASYNC THREAD",
+        "ASYNC MP PROC PIPE",
+        "ASYNC MP PROC QUEUE",
+    )
     durations = []
     cpu_total_m = cpu_count()
-    for method in range(0,len(METHOD_DESC)):
+    for method in range(0, len(METHOD_DESC)):
         start_time_m = datetime.now()
         test_factorize(method)
         duration_m = datetime.now() - start_time_m
@@ -160,6 +172,7 @@ def test_fact():
         logging.info(
             f"Method [{METHOD_DESC[method]}]. Duration: {duration_m}  on this system is total cpu: {cpu_total_m}"
         )
+
 
 if __name__ == "__main__":
     logging.basicConfig(

@@ -1,56 +1,57 @@
-from multiprocessing import Pipe, Process, current_process
+from multiprocessing import Queue, Process, current_process
 from time import sleep
 import sys
 import logging
 
-logger = logging.getLogger()
-stream_handler = logging.StreamHandler()
-logger.addHandler(stream_handler)
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger()
+# stream_handler = logging.StreamHandler()
+# logger.addHandler(stream_handler)
+# logger.setLevel(logging.DEBUG)
 
 
 
 
-def worker(pipe: Pipe):
+def worker(Queue: Queue):
     name = current_process().name
     logger.debug(f'{name} started...')
-    val = pipe.recv()
+    val = Queue.get()
     logger.debug(val**2)
     sys.exit(0)
 
 
-def factorize_one_pipe(pipe: Pipe) -> None:
+def factorize_one_queue(queue: Queue) -> None:
     name = current_process().name
     # logger.debug(f'{name} started...')
-    idx, n = pipe.recv()
+    idx, n = queue.get()
     # logger.debug(f'{name} received ... {n}')
     result_div = []
     for i in range(1, n + 1):
         if n % i == 0:
             result_div.append(i)
-    pipe.send((idx, result_div))
+    queue.put((idx, result_div))
     sys.exit(0)
 
 
-def factorize_mul_pipe(*number: object) -> tuple[list[int]]:
+def factorize_mul_queue(*number: object) -> tuple[list[int]]:
     result: list[list[int]] = []
     recipients = []
     senders = []
     processes = []
-    for n in enumerate(number):
-        sender, recipient = Pipe(duplex=True)
-        recipients.append(recipient)
-        senders.append(sender)
-        w = Process(target=factorize_one_pipe, args=(recipient,))
+    q = Queue()
+    for _ in number:
+        w = Process(target=factorize_one_queue, args=(q,))
         w.start()
         processes.append(w)
-        # print("sending", n)
-        sender.send(n)
+    # send tasks
+    for n in enumerate(number):
+        q.put(n)
 
-    #g rab results
-    for idx, sender in enumerate(senders):
-        result.append(sender.recv()[1])
-    # [p.join() for p in processes]
+    [p.join() for p in processes]
+
+    # get results
+    for _ in processes:
+        idx, res = q.get()
+        result.append(res)
     return tuple(result)
 
 
@@ -58,7 +59,7 @@ def test_factorize(method: int = 0):
     source = (128, 255, 99999, 10651060)
 
     if method == 0:
-        a, b, c, d = factorize_mul_pipe(*source)
+        a, b, c, d = factorize_mul_queue(*source)
 
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]
