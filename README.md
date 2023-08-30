@@ -75,3 +75,14 @@ python main.py -s picrures -t 1 -v
 2023-08-30 06:18:03,054 [ MainThread ] Duration : 0:00:00.022543 with threads: 1
 ```
 
+# MULTICORE
+
+##  test factorize by two methods with measure time
+```
+python main.py -f
+2023-08-30 08:42:53,824 [ MainThread ] Method [SYNC ONE FUNC]. Duration: 0:00:00.680578  on this system is total cpu: 4
+2023-08-30 08:42:54,490 [ MainThread ] Method [SYNC SPLIT FUNC]. Duration: 0:00:00.664976  on this system is total cpu: 4
+2023-08-30 08:42:55,394 [ MainThread ] Method [ASYNC POOL]. Duration: 0:00:00.904670  on this system is total cpu: 4
+2023-08-30 08:42:56,031 [ MainThread ] Method [ASYNC THREAD]. Duration: 0:00:00.636503  on this system is total cpu: 4
+
+```

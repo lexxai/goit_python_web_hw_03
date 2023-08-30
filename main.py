@@ -97,9 +97,9 @@ def main(args_cli: dict = None):
 
 
 def test_fact():
-    METHOD_DESC: tuple = ('SYNC', "ASYNC POOL")
+    METHOD_DESC: tuple = ('SYNC ONE FUNC', 'SYNC SPLIT FUNC', "ASYNC POOL", "ASYNC THREAD")
     cpu_total_m = cpu_count()
-    for method in range(0,2):
+    for method in range(0,len(METHOD_DESC)):
         start_time_m = datetime.now()
         test_factorize(method)
         duration_m = datetime.now() - start_time_m
