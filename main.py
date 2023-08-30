@@ -16,6 +16,7 @@ from factorize_sync import (
 from factorize_async_pipe import factorize_mul_pipe
 from factorize_async_queue import factorize_mul_queue
 from factorize_async_joinqueue import factorize_mul_jqueue
+from time import sleep
 
 
 def get_params():
@@ -175,6 +176,7 @@ def test_fact():
         logging.info(
             f"Method [{METHOD_DESC[method]}]. Duration: {duration_m}  on this system is total cpu: {cpu_total_m}"
         )
+        sleep(1)
 
 
 if __name__ == "__main__":

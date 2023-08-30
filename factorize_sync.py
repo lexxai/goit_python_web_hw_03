@@ -1,12 +1,14 @@
 from multiprocessing import cpu_count, Pool, current_process
 from threading import Thread, Semaphore, RLock
-
+import random
+from time import sleep
 
 def factorize_one(n: list[int]) -> list[int]:
     result_div = []
     for i in range(1, n + 1):
         if n % i == 0:
             result_div.append(i)
+    # sleep(random.randrange(1,5))
     return result_div
 
 

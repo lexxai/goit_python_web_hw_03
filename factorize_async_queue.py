@@ -28,13 +28,14 @@ def factorize_mul_queue(*number: object) -> tuple[list[int]]:
     result: list[list[int]] = []
     processes = []
     q = Queue()
-    for _ in number:
+    for n in enumerate(number):
         w = Process(target=factorize_one_queue, args=(q,))
         w.start()
         processes.append(w)
-    # send tasks
-    for n in enumerate(number):
         q.put(n)
+    # send tasks
+    # for n in enumerate(number):
+    #     q.put(n)
 
     [p.join() for p in processes]
 
