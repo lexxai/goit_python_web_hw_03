@@ -7,6 +7,7 @@ from typing import Any
 from uuid import uuid4
 from datetime import datetime
 from factorize_sync import test_factorize
+from multiprocessing import cpu_count
 
 
 def get_params():
@@ -102,10 +103,13 @@ if __name__ == "__main__":
     args = get_params()
     threads_max = args.get("threads", 10)
     factorize = args.get("factorize", False)
+    cpu_total = cpu_count()
     start_time = datetime.now()
     if factorize:
         test_factorize()
     else:
         main(args_cli=args)
     duration = datetime.now() - start_time
-    logging.info(f"Duration : {duration} with threads: {threads_max}")
+    logging.info(
+        f"Duration : {duration} with max threads: {threads_max}, on this system is total cpu: {cpu_total}"
+    )

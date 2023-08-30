@@ -1,5 +1,4 @@
-from typing import List, Any
-
+from multiprocessing import cpu_count, process
 
 def factorize(*number):
     max_number = max(number)
