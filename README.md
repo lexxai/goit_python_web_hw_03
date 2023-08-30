@@ -77,7 +77,7 @@ python main.py -s picrures -t 1 -v
 
 # MULTICORE
 
-##  test factorize by two methods with measure time
+##  test factorize by 8 methods with measure time
 ```
 python main.py -f
 2023-08-30 23:32:54,127 [ MainThread ] On this system is total cpu: 4
