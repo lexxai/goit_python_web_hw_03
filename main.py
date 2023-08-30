@@ -3,6 +3,7 @@ from shutil import copyfile
 from threading import Thread, Semaphore
 import argparse
 import logging
+from typing import Any
 from uuid import uuid4
 from datetime import datetime
 
@@ -64,7 +65,7 @@ def get_folders(source_path: Path) -> list[Path]:
 def main(args_cli: dict = None):
     source = args_cli.get("source")
     output = args_cli.get("output", "sort_result")
-    threads_max = args_cli.get("threads", 10)
+    threads_maximum: int = args_cli.get("threads", 10)
     verbose = args_cli.get("verbose", False)
 
     assert source is not None, "Source must be defined"
@@ -73,10 +74,12 @@ def main(args_cli: dict = None):
     folders = get_folders(Path(source))
     output_path = Path(output)
     threads = []
-    pool = Semaphore(threads_max)
+    pool = Semaphore(threads_maximum)
     for num, folder in enumerate(folders):
         th = Thread(
-            name=f"Th-{num}", target=sort_folder, args=(folder, output_path, pool, verbose)
+            name=f"Th-{num}",
+            target=sort_folder,
+            args=(folder, output_path, pool, verbose),
         )
         th.start()
         threads.append(th)
