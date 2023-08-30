@@ -9,16 +9,6 @@ import logging
 # logger.setLevel(logging.DEBUG)
 
 
-
-
-def worker(Queue: Queue):
-    name = current_process().name
-    logger.debug(f'{name} started...')
-    val = Queue.get()
-    logger.debug(val**2)
-    sys.exit(0)
-
-
 def factorize_one_queue(queue: Queue) -> None:
     name = current_process().name
     # logger.debug(f'{name} started...')
@@ -34,8 +24,6 @@ def factorize_one_queue(queue: Queue) -> None:
 
 def factorize_mul_queue(*number: object) -> tuple[list[int]]:
     result: list[list[int]] = []
-    recipients = []
-    senders = []
     processes = []
     q = Queue()
     for _ in number:
@@ -93,21 +81,6 @@ def test_factorize(method: int = 0):
     ]
     print("All ok")
 
-def test_less():
-    recipient1, sender1 = Pipe()
-    recipient2, sender2 = Pipe()
 
-    w1 = Process(target=worker, args=(recipient1, ))
-    w2 = Process(target=worker, args=(recipient2, ))
-
-    w1.start()
-    w2.start()
-
-    sender1.send(8)
-    sleep(1)
-    sender2.send(16)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_factorize()
-    # test_less()
-
