@@ -1,4 +1,4 @@
-from multiprocessing import Queue, Process, current_process
+from multiprocessing import JoinableQueue, Process, current_process
 from time import sleep
 import sys
 import logging
@@ -10,38 +10,41 @@ import random
 # logger.setLevel(logging.DEBUG)
 
 
-def factorize_one_queue(queue: Queue) -> None:
+def factorize_one_jqueue(jqueue: JoinableQueue, result_jq: JoinableQueue) -> None:
     name = current_process().name
     # logger.debug(f'{name} started...')
-    idx, n = queue.get()
+    idx, n = jqueue.get()
     # logger.debug(f'{name} received ... {n}')
     result_div = []
     for i in range(1, n + 1):
         if n % i == 0:
             result_div.append(i)
     # sleep(random.randrange(1,5))
-    queue.put((idx, result_div))
+    result_jq.put((idx, result_div))
+    jqueue.task_done()
     sys.exit(0)
 
 
-def factorize_mul_queue(*number: object) -> tuple[list[int]]:
+def factorize_mul_jqueue(*number: object) -> tuple[list[int]]:
     result: list[list[int]] = []
     processes = []
-    q = Queue()
-    for _ in number:
-        w = Process(target=factorize_one_queue, args=(q,))
+    jq = JoinableQueue()
+    res_jq = JoinableQueue()
+    for n in enumerate(number):
+        w = Process(target=factorize_one_jqueue, args=(jq, res_jq))
         w.start()
         processes.append(w)
+        jq.put(n)
     # send tasks
-    for n in enumerate(number):
-        q.put(n)
+    #for n in enumerate(number):
+    #   jq.put(n)
 
-    [p.join() for p in processes]
-
+    jq.join()
+    # print("JQ DONE")
     # get results
     for _ in processes:
-        idx, res = q.get()
-        result.insert(idx, res)
+        idx, res = res_jq.get()
+        result.insert(idx,res)
     return tuple(result)
 
 
@@ -49,7 +52,7 @@ def test_factorize(method: int = 0):
     source = (128, 255, 99999, 10651060)
 
     if method == 0:
-        a, b, c, d = factorize_mul_queue(*source)
+        a, b, c, d = factorize_mul_jqueue(*source)
 
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]

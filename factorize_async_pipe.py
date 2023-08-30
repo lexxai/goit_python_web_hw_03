@@ -2,6 +2,7 @@ from multiprocessing import Pipe, Process, current_process
 from time import sleep
 import sys
 import logging
+import random
 
 logger = logging.getLogger()
 stream_handler = logging.StreamHandler()
@@ -28,6 +29,7 @@ def factorize_one_pipe(pipe: Pipe) -> None:
     for i in range(1, n + 1):
         if n % i == 0:
             result_div.append(i)
+    # sleep(random.randrange(1,5))
     pipe.send((idx, result_div))
     sys.exit(0)
 

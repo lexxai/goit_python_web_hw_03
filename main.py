@@ -15,6 +15,7 @@ from factorize_sync import (
 )
 from factorize_async_pipe import factorize_mul_pipe
 from factorize_async_queue import factorize_mul_queue
+from factorize_async_joinqueue import factorize_mul_jqueue
 
 
 def get_params():
@@ -120,7 +121,8 @@ def test_factorize(method: int = 0):
         a, b, c, d = factorize_mul_pipe(*source)
     elif method == 5:
         a, b, c, d = factorize_mul_queue(*source)
-
+    elif method == 6:
+        a, b, c, d = factorize_mul_jqueue(*source)
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]
     assert c == [1, 3, 9, 41, 123, 271, 369, 813, 2439, 11111, 33333, 99999]
@@ -161,6 +163,7 @@ def test_fact():
         "ASYNC THREAD",
         "ASYNC MP PROC PIPE",
         "ASYNC MP PROC QUEUE",
+        "ASYNC MP PROC JOIN QUEUE",
     )
     durations = []
     cpu_total_m = cpu_count()
