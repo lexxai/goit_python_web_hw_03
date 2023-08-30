@@ -80,13 +80,15 @@ python main.py -s picrures -t 1 -v
 ##  test factorize by two methods with measure time
 ```
 python main.py -f
-Method [SYNC ONE FUNC]. Duration: 0:00:00.677157  on this system is total cpu: 4
-Method [SYNC SPLIT FUNC]. Duration: 0:00:00.661641  on this system is total cpu: 4
-Method [ASYNC MP POOL]. Duration: 0:00:00.880006  on this system is total cpu: 4
-Threads max: 10
-Method [ASYNC THREAD]. Duration: 0:00:00.860886  on this system is total cpu: 4
-Method [ASYNC MP PROC PIPE]. Duration: 0:00:00.952254  on this system is total cpu: 4
-Method [ASYNC MP PROC QUEUE]. Duration: 0:00:00.913319  on this system is total cpu: 4
-Method [ASYNC MP PROC JOIN QUEUE]. Duration: 0:00:00.905310  on this system is total cpu: 4
+2023-08-30 23:32:54,127 [ MainThread ] On this system is total cpu: 4
+2023-08-30 23:32:55,203 [ MainThread ] Method [SYNC ONE FUNC]. Duration: 0:00:01.076801
+2023-08-30 23:32:57,340 [ MainThread ] Method [SYNC SPLIT FUNC]. Duration: 0:00:01.134340
+2023-08-30 23:32:59,802 [ MainThread ] Method [ASYNC MP POOL]. Duration: 0:00:01.458097
+2023-08-30 23:33:00,806 [ MainThread ] Threads max: 10
+2023-08-30 23:33:01,933 [ MainThread ] Method [ASYNC THREAD]. Duration: 0:00:01.126956
+2023-08-30 23:33:04,381 [ MainThread ] Method [ASYNC MP PROC PIPE]. Duration: 0:00:01.445985
+2023-08-30 23:33:07,013 [ MainThread ] Method [ASYNC MP PROC QUEUE]. Duration: 0:00:01.621996
+2023-08-30 23:33:09,427 [ MainThread ] Method [ASYNC MP PROC JOIN QUEUE]. Duration: 0:00:01.404368
+2023-08-30 23:33:11,825 [ MainThread ] Method [ASYNC MP FUTURE CONCURENT]. Duration: 0:00:01.389093
 
 ```

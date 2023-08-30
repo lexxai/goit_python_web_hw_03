@@ -19,6 +19,7 @@ from factorize_async_queue import factorize_mul_queue
 from factorize_async_joinqueue import factorize_mul_jqueue
 from factorize_async_pool import factorize_mul_pool
 from factorize_sync_thread import factorize_mul_thread
+from factorize_async_concurrent import factorize_mul_concurrent
 
 
 logging.config.fileConfig('logging.conf')
@@ -131,6 +132,9 @@ def test_factorize(method: int = 0):
         a, b, c, d = factorize_mul_queue(*source)
     elif method == 6:
         a, b, c, d = factorize_mul_jqueue(*source)
+    elif method == 7:
+        a, b, c, d = factorize_mul_concurrent(*source)
+        
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]
     assert c == [1, 3, 9, 41, 123, 271, 369, 813, 2439, 11111, 33333, 99999]
@@ -172,16 +176,20 @@ def test_fact():
         "ASYNC MP PROC PIPE",
         "ASYNC MP PROC QUEUE",
         "ASYNC MP PROC JOIN QUEUE",
+        "ASYNC MP FUTURE CONCURENT",
     )
     durations = []
     cpu_total_m = cpu_count()
+    logging.info(
+        f"On this system is total cpu: {cpu_total_m}"
+    )
     for method in range(0, len(METHOD_DESC)):
         start_time_m = datetime.now()
         test_factorize(method)
         duration_m = datetime.now() - start_time_m
         durations.append(duration_m)
         logging.info(
-            f"Method [{METHOD_DESC[method]}]. Duration: {duration_m}  on this system is total cpu: {cpu_total_m}"
+            f"Method [{METHOD_DESC[method]}]. Duration: {duration_m}"
         )
         sleep(1)
 
