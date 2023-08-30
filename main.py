@@ -3,20 +3,25 @@ from shutil import copyfile
 from threading import Thread, Semaphore
 import argparse
 import logging
+import logging.config
 from typing import Any, Tuple
 from uuid import uuid4
 from datetime import datetime
+from time import sleep
 from multiprocessing import cpu_count
 from factorize_sync import (
     factorize_mul,
     factorize_mul_thread,
-    factorize_mul_pool,
     factorize_sync,
 )
+
 from factorize_async_pipe import factorize_mul_pipe
 from factorize_async_queue import factorize_mul_queue
 from factorize_async_joinqueue import factorize_mul_jqueue
-from time import sleep
+from factorize_async_pool import factorize_mul_pool
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger(__name__)
 
 
 def get_params():
@@ -180,9 +185,11 @@ def test_fact():
 
 
 if __name__ == "__main__":
+
     logging.basicConfig(
         level=logging.DEBUG, format="%(asctime)s [ %(threadName)s ] %(message)s"
     )
+    logger = logging.getLogger(__name__)
     args = get_params()
     threads_max = args.get("threads", 10)
     factorize = args.get("factorize", False)
@@ -194,6 +201,6 @@ if __name__ == "__main__":
         start_time = datetime.now()
         main(args_cli=args)
         duration = datetime.now() - start_time
-        logging.info(
+        logger.info(
             f"Duration : {duration} with max threads: {threads_max}, on this system is total cpu: {cpu_total}"
         )

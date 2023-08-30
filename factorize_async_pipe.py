@@ -2,14 +2,12 @@ from multiprocessing import Pipe, Process, current_process
 from time import sleep
 import sys
 import logging
+import logging.config
 import random
 
-logger = logging.getLogger()
-stream_handler = logging.StreamHandler()
-logger.addHandler(stream_handler)
-logger.setLevel(logging.DEBUG)
 
-
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger(__name__)
 
 
 def worker(pipe: Pipe):
@@ -22,7 +20,7 @@ def worker(pipe: Pipe):
 
 def factorize_one_pipe(pipe: Pipe) -> None:
     name = current_process().name
-    # logger.debug(f'{name} started...')
+    logger.debug(f'{name} started...')
     idx, n = pipe.recv()
     # logger.debug(f'{name} received ... {n}')
     result_div = []

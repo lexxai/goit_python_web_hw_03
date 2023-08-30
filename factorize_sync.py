@@ -2,6 +2,12 @@ from multiprocessing import cpu_count, Pool, current_process
 from threading import Thread, Semaphore, RLock
 import random
 from time import sleep
+import logging
+import logging.config
+
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger(__name__)
 
 def factorize_one(n: list[int]) -> list[int]:
     result_div = []

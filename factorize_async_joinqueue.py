@@ -2,17 +2,16 @@ from multiprocessing import JoinableQueue, Process, current_process
 from time import sleep
 import sys
 import logging
+import logging.config
 import random
 
-# logger = logging.getLogger()
-# stream_handler = logging.StreamHandler()
-# logger.addHandler(stream_handler)
-# logger.setLevel(logging.DEBUG)
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger(__name__)
 
 
 def factorize_one_jqueue(jqueue: JoinableQueue, result_jq: JoinableQueue) -> None:
     name = current_process().name
-    # logger.debug(f'{name} started...')
+    logger.debug(f'{name} started...')
     idx, n = jqueue.get()
     # logger.debug(f'{name} received ... {n}')
     result_div = []
