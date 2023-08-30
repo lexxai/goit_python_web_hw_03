@@ -81,7 +81,7 @@ def test_factorize(method: int = 0):
         5325530,
         10651060,
     ]
-    print("All ok")
+    logger.info("ALL OK")
 
 
 if __name__ == "__main__":

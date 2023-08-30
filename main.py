@@ -11,7 +11,6 @@ from time import sleep
 from multiprocessing import cpu_count
 from factorize_sync import (
     factorize_mul,
-    factorize_mul_thread,
     factorize_sync,
 )
 
@@ -19,6 +18,8 @@ from factorize_async_pipe import factorize_mul_pipe
 from factorize_async_queue import factorize_mul_queue
 from factorize_async_joinqueue import factorize_mul_jqueue
 from factorize_async_pool import factorize_mul_pool
+from factorize_sync_thread import factorize_mul_thread
+
 
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger(__name__)
@@ -79,6 +80,7 @@ def get_folders(source_path: Path) -> list[Path]:
         if el.is_dir():
             folders.append(el)
     return folders
+
 
 
 def main(args_cli: dict = None):
@@ -186,9 +188,9 @@ def test_fact():
 
 if __name__ == "__main__":
 
-    logging.basicConfig(
-        level=logging.DEBUG, format="%(asctime)s [ %(threadName)s ] %(message)s"
-    )
+    # logging.basicConfig(
+    #     level=logging.DEBUG, format="%(asctime)s [ %(threadName)s ] %(message)s"
+    # )
     logger = logging.getLogger(__name__)
     args = get_params()
     threads_max = args.get("threads", 10)

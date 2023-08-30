@@ -10,19 +10,11 @@ logging.config.fileConfig('logging.conf')
 logger = logging.getLogger(__name__)
 
 
-def worker(pipe: Pipe):
-    name = current_process().name
-    logger.debug(f'{name} started...')
-    val = pipe.recv()
-    logger.debug(val**2)
-    sys.exit(0)
-
-
 def factorize_one_pipe(pipe: Pipe) -> None:
     name = current_process().name
-    logger.debug(f'{name} started...')
+    logger.info(f'{name} started...')
     idx, n = pipe.recv()
-    # logger.debug(f'{name} received ... {n}')
+    logger.debug(f'{name} received ... {n}')
     result_div = []
     for i in range(1, n + 1):
         if n % i == 0:
@@ -90,7 +82,7 @@ def test_factorize(method: int = 0):
         5325530,
         10651060,
     ]
-    print("All ok")
+    logger.info("ALL OK")
 
 def test_less():
     recipient1, sender1 = Pipe()
