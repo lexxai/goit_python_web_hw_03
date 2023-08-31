@@ -6,7 +6,7 @@ import logging.config
 import random
 
 
-logging.config.fileConfig('logging.conf')
+# logging.config.fileConfig('logging.conf')
 logger = logging.getLogger(__name__)
 
 
@@ -14,6 +14,7 @@ def factorize_one_jqueue(jqueue: JoinableQueue, result_jq: JoinableQueue) -> Non
     name = current_process().name
     logger.debug(f'{name} started...')
     idx, n = jqueue.get()
+    logger.debug(f'({__name__}) {n}')
     # logger.debug(f'{name} received ... {n}')
     result_div = []
     for i in range(1, n + 1):
@@ -88,4 +89,8 @@ def test_factorize(method: int = 0):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s PID: %(process)d [ %(threadName)s ] %(message)s",
+    )
     test_factorize()
