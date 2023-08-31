@@ -39,7 +39,7 @@ def factorize_mul_queue(*number: object) -> tuple[list[int]]:
     [p.join() for p in processes]
 
     # get results
-    result: list = list(None for _ in len(processes))
+    result: list = list(None for _ in processes)
     for _ in processes:
         idx, res = q.get()
         result[idx] = res
