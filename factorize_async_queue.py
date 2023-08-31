@@ -24,7 +24,6 @@ def factorize_one_queue(queue: Queue) -> None:
 
 
 def factorize_mul_queue(*number: object) -> tuple[list[int]]:
-    result: list[list[int]] = []
     processes = []
     q = Queue()
     for n in enumerate(number):
@@ -39,9 +38,10 @@ def factorize_mul_queue(*number: object) -> tuple[list[int]]:
     [p.join() for p in processes]
 
     # get results
+    result: list = list(None for _ in len(processes))
     for _ in processes:
         idx, res = q.get()
-        result.insert(idx, res)
+        result[idx] = res
     return tuple(result)
 
 
