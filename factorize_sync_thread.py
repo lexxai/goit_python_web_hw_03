@@ -82,4 +82,8 @@ def test_factorize(method: int = 0):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s PID: %(process)d [ %(threadName)s ] %(message)s",
+    )
     test_factorize()

@@ -99,6 +99,10 @@ def test_less():
     sender2.send(16)
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s PID: %(process)d [ %(threadName)s ] %(message)s",
+    )
     test_factorize()
     # test_less()
 
