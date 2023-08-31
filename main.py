@@ -22,7 +22,10 @@ from factorize_sync_thread import factorize_mul_thread
 from factorize_async_concurrent import factorize_mul_concurrent
 
 
-logging.config.fileConfig('logging.conf')
+# logging.config.fileConfig('logging.conf')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s PID: %(process)d [ %(threadName)s ] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 

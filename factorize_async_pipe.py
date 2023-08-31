@@ -6,15 +6,15 @@ import logging.config
 import random
 
 
-logging.config.fileConfig('logging.conf')
+# logging.config.fileConfig('logging.conf')
 logger = logging.getLogger(__name__)
 
 
 def factorize_one_pipe(pipe: Pipe) -> None:
     name = current_process().name
-    logger.info(f'{name} started...')
+    logger.debug(f"({__name__}) {name} started...")
     idx, n = pipe.recv()
-    logger.debug(f'{name} received ... {n}')
+    logger.debug(f'({__name__}) {name} received ... {n}')
     result_div = []
     for i in range(1, n + 1):
         if n % i == 0:

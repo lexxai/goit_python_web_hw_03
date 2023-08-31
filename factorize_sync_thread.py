@@ -6,14 +6,15 @@ import logging
 import logging.config
 
 
-logging.config.fileConfig('logging.conf')
+# logging.config.fileConfig('logging.conf')
 logger = logging.getLogger(__name__)
 
 
 def factorize_one_th(
-    idx: int, n: list[int], result: list[list], condition: Semaphore, lock: RLock
+    idx: int, n: int, result: list[list], condition: Semaphore, lock: RLock
 ) -> None:
     with condition:
+        logger.debug(f"({__name__}) {n}")
         result_div = []
         for i in range(1, n + 1):
             if n % i == 0:

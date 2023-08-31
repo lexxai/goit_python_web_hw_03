@@ -6,11 +6,12 @@ import logging
 import logging.config
 
 
-logging.config.fileConfig('logging.conf')
+# logging.config.fileConfig('logging.conf')
 logger = logging.getLogger(__name__)
 
 
 def factorize_one(n: list[int]) -> list[int]:
+    logger.debug(f'({__name__}) {n}')
     result_div = []
     for i in range(1, n + 1):
         if n % i == 0:
